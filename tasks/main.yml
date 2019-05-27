@@ -1,0 +1,50 @@
+---
+- name: Check to see if solr_core_conf_source exists
+  stat:
+    path: "{{ solr_core_conf_source }}"
+  register: result_src
+
+- debug:
+    var: solr_core_conf_source
+- debug:
+    var: result_src
+
+- name: Check to see if solr_core_conf_dest exists
+  stat:
+    path: "{{ solr_core_conf_dest }}"
+  register: result_dest
+
+- debug:
+    var: solr_core_conf_dest
+- debug:
+    var: result_dest
+
+- name: Copy the solr schema into the core's conf directory
+  synchronize:
+    src: "{{ solr_core_conf_source }}/"
+    dest: "{{ solr_core_conf_dest }}/"
+    archive: true
+    checksum: true
+    compress: false
+    delete: true
+    dirs: true
+    group: false
+    mode: push
+    owner: false
+    perms: false
+    recursive: true
+    times: false
+  delegate_to: "{{ inventory_hostname }}"
+  when: result_src is defined
+    and result_src.stat is defined
+    and result_src.stat.exists
+    and result_dest is defined
+    and result_dest.stat is defined
+    and result_dest.stat.exists
+  notify: arscc restart solr
+  register: sync_solr_conf
+
+- name: Reset permissions on solr core config files
+  command: >
+    /bin/chown -Rv solr:solr "{{ solr_core_conf_dest }}"
+  when: sync_solr_conf.changed

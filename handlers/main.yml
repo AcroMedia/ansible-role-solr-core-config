@@ -1,0 +1,5 @@
+---
+- name: arscc restart solr
+  service:
+    name: "{{ solr_service_name }}"
+    state: restarted

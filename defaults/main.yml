@@ -1,0 +1,4 @@
+---
+solr_service_name: solr
+solr_conf_root: /var/solr
+solr_core_conf_dest: "{{ solr_conf_root }}/data/{{ solr_core_name }}/conf"
