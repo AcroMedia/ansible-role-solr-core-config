@@ -29,16 +29,28 @@ This is meant to be used in conjunction with (and after both of) GeerlingGuy's s
 None
 
 
-## Example Playbook
+## Example Playbooks
 
 ```yaml
     - hosts: servers
       roles:
-        - name: Configure solr core XYZ
+        - name: Configure solr core XYZ in the default solr installation
           role: acromedia.solr-core-config
           vars:
             solr_core_conf_source: /var/www/html/siteXYZ/modules/contrib/search_api_solr/solr-conf/6.x
             solr_core_name: coreXYZ
+```
+
+```yaml
+    - hosts: servers
+      roles:
+        - name: Configure a 2nd solr core running for a different version of solr (7), which is side by side with the first (6)
+          role: acromedia.solr-core-config
+          vars:
+            solr_core_conf_source: /var/www/html/siteABC/modules/contrib/search_api_solr/solr-conf/7.x
+            solr_core_name: coreABC
+            solr_service_name: solr7
+            solr_home: /var/solr7
 ```
 
 
