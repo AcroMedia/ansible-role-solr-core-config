@@ -24,7 +24,7 @@ $ molecule login
 ```
 
 
-- you can add a tag to get different versions of the SolR repo: https://hub.docker.com/r/geerlingguy/solr
+- you can add a tag to get different versions from this SolR repo: https://hub.docker.com/r/geerlingguy/solr
 
 __Variations of TAG__ 
       
