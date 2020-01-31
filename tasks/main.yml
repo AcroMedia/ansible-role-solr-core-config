@@ -1,4 +1,13 @@
 ---
+- debug:
+    msg:
+    - "ansible_os_family:                 {{ ansible_os_family }}"
+    - "test_environment:                  {{ test_environment }}"
+
+- name: Import variables for test suite
+  include_vars: "vars/main-test.yml"
+  when: test_environment
+
 - name: Check to see if solr_core_conf_source exists
   stat:
     path: "{{ solr_core_conf_source }}"

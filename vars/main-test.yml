@@ -1,0 +1,3 @@
+---
+solr_core_conf_source: "/var/www/html/siteXYZ/modules/contrib/search_api_solr/solr-conf/7.x"
+solr_core_name: "maincore"

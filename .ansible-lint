@@ -1,0 +1,3 @@
+skip_list:
+  - '302' # Ignore [302] chown used in place of argument owner to file module
+  - '503' # Ignore [503] Tasks that run when changed should likely be handlers

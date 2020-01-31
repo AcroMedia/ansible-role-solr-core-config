@@ -7,6 +7,40 @@ This is meant to be used in conjunction with (and after both of) GeerlingGuy's s
 **Warning**: All of the contents of  `/{{ solr_home }}/data/{{ solr_core_name }}/conf` will be replaced by the contents of `{{ solr_core_conf_source }}`. If you want your conf dir backed up, you'll need to do that before running this role.
 
 
+## Molecule Setup
+
+- refer to setup instructions for basic test running: [molecule-setup](https://git.acromedia.com/mmccann/molecule-setup/blob/master/README.md)
+- after setting up your virtual environment and installing dependencies ...
+
+```bash
+$ TEST=true TAG="7.4.0" molecule test --destroy=never
+```
+
+- you must pass in ```TEST=true``` so that test variables can be loaded from ```vars/main-test.yml```
+- log into the container and view changes
+
+```bash
+$ molecule login
+```
+
+
+- you can add a tag to get different versions of the SolR repo: https://hub.docker.com/r/geerlingguy/solr
+
+__Variations of TAG__ 
+      
+      7.x, 7.4.0
+      6.x, 6.6.5
+      5.x, 5.5.5
+      4.x, 4.10.4
+      3.x, 3.6.2    
+    
+
+__running the full test suite__
+
+```bash
+$ tox
+```
+
 ## Requirements
 
 * Your solr core's conf directory must already exist

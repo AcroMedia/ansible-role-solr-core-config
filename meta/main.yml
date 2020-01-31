@@ -3,7 +3,7 @@ galaxy_info:
   description: Copy solr core config files from an arbitrary location on the server
   company: Acro Media Inc
   license: GPLv3
-  min_ansible_version: 2.4
+  min_ansible_version: 2.9
   platforms:
     - name: EL
       versions:
