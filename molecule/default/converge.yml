@@ -21,7 +21,6 @@
       package:
         name: rsync
         state: present
-      when: ansible_os_family == 'redhat'
 
   roles:
     - role: ansible-role-solr-core-config
