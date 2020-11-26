@@ -16,12 +16,6 @@
         path: /var/solr/data/test/conf
         state: directory
 
-
-    - name: Install rsync
-      package:
-        name: rsync
-        state: present
-
     - name: Install rsync
       connection: local
       package:
