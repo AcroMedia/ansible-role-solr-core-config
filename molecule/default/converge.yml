@@ -22,5 +22,11 @@
         name: rsync
         state: present
 
+    - name: Install rsync
+      connection: local
+      package:
+        name: rsync
+        state: present
+
   roles:
     - role: ansible-role-solr-core-config
