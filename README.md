@@ -1,5 +1,7 @@
 # ansible-role-solr-core-config
 
+![.github/workflows/molecule.yml](https://github.com/AcroMedia/ansible-role-solr-core-config/workflows/.github/workflows/molecule.yml/badge.svg)
+
 Copy a config set from an arbitrary location (ie one that ships with the solr drupal module) into the solr core's config directory.
 
 This is meant to be used in conjunction with (and after both of) GeerlingGuy's solr role, and Acro Media's virtual host role.
