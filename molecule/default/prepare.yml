@@ -38,5 +38,3 @@
         src: "conf/7.x/*"
         dest: "/var/www/solr_conf/"
 
-
-
