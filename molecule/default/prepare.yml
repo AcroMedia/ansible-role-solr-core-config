@@ -1,7 +1,7 @@
-- name: Make sure rysnc is installed locally
-  hosts: localhost
-  connection: local
-  become: no
+---
+- name: Prepare targets for converge
+  hosts: all
+  become: yes
   gather_facts: yes
   tasks:
 
@@ -22,3 +22,21 @@
         name:
           - rsync
         state: present
+
+    - name: Create solr conf directory
+      file:
+        path: /var/solr/data/test/conf
+        state: directory
+
+    - name: Create conf folder
+      file:
+        path: /var/www/solr_conf
+        state: directory
+
+    - name: Copy the solr schema into the core's conf directory
+      synchronize:
+        src: "conf/7.x/*"
+        dest: "/var/www/solr_conf/"
+
+
+
