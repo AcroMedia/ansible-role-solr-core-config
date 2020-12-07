@@ -22,6 +22,7 @@
         name:
           - rsync
         state: present
+      when: ansible_os_family == 'RedHat'
 
     - name: Create solr conf directory
       file:
@@ -33,8 +34,8 @@
         path: /var/www/solr_conf
         state: directory
 
-    - name: Copy the solr schema into the core's conf directory
+    - name: Copy the solr schema into a temp folder
       synchronize:
-        src: "conf/7.x/*"
+        src: "conf/7.x/"
         dest: "/var/www/solr_conf/"
 
