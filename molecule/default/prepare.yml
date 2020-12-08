@@ -22,6 +22,14 @@
         name:
           - rsync
         state: present
+      when: ansible_os_family == 'RedHat'
+
+    - name: Ensure rsync exists on the controller
+        apt:
+          pkg:
+            - rsync
+          state: present
+        when: ansible_os_family == 'Ubuntu'
 
     - name: Create solr conf directory
       file:
