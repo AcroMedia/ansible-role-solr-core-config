@@ -22,7 +22,6 @@
         name:
           - rsync
         state: present
-      when: ansible_os_family == 'RedHat'
 
     - name: Create solr conf directory
       file:
