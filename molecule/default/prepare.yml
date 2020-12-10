@@ -1,4 +1,33 @@
 ---
+# ------------------------------------------------------------------------
+- name: Make sure rsync is installed (locally) on the ansible controller.
+    This is only necessary for testing roles that use rsync, because the fedora
+    image from robertdebock does not come with rsync installed.
+  hosts: localhost
+  connection: local
+  become: no
+  gather_facts: yes
+  tasks:
+
+    - name: Update yum cache on the controller
+      yum:
+        update_cache: yes
+      when: ansible_os_family == 'RedHat'
+
+    - name: Ensure ssh client is installed on the controller
+      package:
+        name:
+          - openssh-clients
+        state: present
+      when: ansible_os_family == 'RedHat'
+
+    - name: Ensure rsync exists on the controller
+      package:
+        name:
+          - rsync
+        state: present
+
+# ------------------------------------------------------------------------
 - name: Prepare targets for converge
   hosts: all
   become: yes
@@ -24,12 +53,6 @@
         state: present
       when: ansible_os_family == 'RedHat'
 
-    - name: Ensure rsync exists on the controller
-      apt:
-        pkg:
-          - rsync
-        state: present
-      when: ansible_os_family == 'Debian'
 
     - name: Create solr conf directory
       file:
