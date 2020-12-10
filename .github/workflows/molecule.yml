@@ -27,7 +27,6 @@ jobs:
     strategy:
       matrix:
         image:
-          - geerlingguy/docker-centos6-ansible:latest
           - geerlingguy/docker-centos7-ansible:latest
           - geerlingguy/docker-ubuntu2004-ansible:latest
           - geerlingguy/docker-ubuntu1804-ansible:latest
