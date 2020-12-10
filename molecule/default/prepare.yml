@@ -26,6 +26,18 @@
         name:
           - rsync
         state: present
+# ------------------------------------------------------------------------
+- name: Prepare Install role dependencies
+  hosts: all
+  become: yes
+  gather_facts: yes
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=true cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+  roles:
+    - contrib/geerlingguy.java
+    - contrib/geerlingguy.solr
 
 # ------------------------------------------------------------------------
 - name: Prepare targets for converge

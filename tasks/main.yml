@@ -41,7 +41,7 @@
     and result_dest is defined
     and result_dest.stat is defined
     and result_dest.stat.exists
-  notify: arscc restart solr
+  # notify: arscc restart solr
   register: sync_solr_conf
 
 - name: Reset permissions on solr core config files
