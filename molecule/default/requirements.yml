@@ -1,0 +1,8 @@
+---
+- name: contrib/geerlingguy.java
+  src: https://github.com/geerlingguy/ansible-role-java
+  version: origin/master
+
+- name: contrib/geerlingguy.solr
+  src: https://github.com/geerlingguy/ansible-role-solr
+  version: origin/master
