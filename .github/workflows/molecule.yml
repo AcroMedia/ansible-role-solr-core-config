@@ -17,7 +17,7 @@ jobs:
         with:
           path: "${{ github.repository }}"
       - name: molecule
-        uses: robertdebock/molecule-action@2.6.3
+        uses: robertdebock/molecule-action@2.6.8
         with:
           command: lint
   test:
@@ -43,3 +43,4 @@ jobs:
           options: parallel
         env:
           MOLECULE_DOCKER_IMAGE: "${{ matrix.image }}"
+          max_failures: 1
