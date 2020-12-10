@@ -49,9 +49,17 @@
     /bin/chown -Rv solr:solr "{{ solr_core_conf_dest }}"
   when: sync_solr_conf.changed
 
+- name: Build the cron command string
+  set_fact:
+    solr_cron_command: service {{ solr_service_name }} restart > /dev/null
+  when: enable_solr_restart == true
+
+
 - name: Restart solr
   cron:
-    name: Restart Solr at 8 am UTC
-    job: service solr restart
-    hour: '8'
-    minute: '0'
+    user: "root"
+    name: "Restart Solr Service"
+    hour: '{{ solr_cron_hours }}'
+    minute: "{{ solr_cron_minutes }}"
+    job: "{{ solr_cron_command }}"
+  when: solr_cron_command != ''

@@ -2,3 +2,9 @@
 solr_service_name: solr
 solr_home: /var/solr
 solr_core_conf_dest: "{{ solr_home }}/data/{{ solr_core_name }}/conf"
+
+# Configure cron settings. Timezone in UTC
+solr_cron_command: ''
+enable_solr_restart: true
+solr_cron_hours: 8
+solr_cron_minutes: 0
