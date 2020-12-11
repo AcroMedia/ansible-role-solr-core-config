@@ -58,12 +58,6 @@
         state: present
       when: ansible_os_family == 'RedHat'
 
-    - name: Ensure ssh client is installed
-      package:
-        name:
-          - openssh-server
-        state: present
-      when: ansible_os_family == 'Debian'
 
     - name: Ensure rsync exists on the controller
       package:
@@ -72,6 +66,16 @@
         state: present
       when: ansible_os_family == 'RedHat'
 
+    - name: Ensure OS-Agnostic dependencies are present in test image
+      package:
+        name: "{{ package_dependencies }}"
+        state: present
+      vars:
+        package_dependencies:
+          - openssh-server
+          - libpopt0
+          - rsync
+      when: ansible_os_family == 'Debian'
     - name: Create solr conf directory
       file:
         path: /var/solr/data/test/conf
