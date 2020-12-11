@@ -5,7 +5,7 @@
   vars:
     solr_core_conf_dest: "/var/solr/data/test/conf"
     solr_config_xml_source: "/var/www/solr_conf/solrconfig.xml"
-    solr_core_properties_source: "/var/www/solr_conf/solrcore.properties"
+    solr_core_properties_dest: "/var/solr/data/test/conf/solrconfig.xml"
 
   tasks:
     - name: Check permissions on solr conf folder
@@ -14,22 +14,23 @@
     - debug: var=solr_permission.stdout_lines
 
 
-    - name: Use sha256 to calculate checksum of a source file
+    - name: Check the properties of source file
       stat:
         path: "{{ solr_config_xml_source }}"
         checksum_algorithm: sha256
-      register: shasum
-    - debug: var=shasum.stat.checksum
+      register: source
 
-    - name: Use sha256 to calculate checksum of the destination file
+
+    - name: Check the properties of destination file
       stat:
-        path: /var/solr/data/test/conf/solrconfig.xml
+        path: "{{ solr_core_properties_dest }}"
         checksum_algorithm: sha256
-      register: chsum
-    - debug: var=chsum.stat.checksum
+      register: dest
+
 
     - assert:
         that:
-          - shasum.stat.checksum == chsum.stat.checksum
-
+          - source.stat.checksum == dest.stat.checksum
+          - source.stat.gr_name == dest.stat.gr_name
+          - source.stat.uid == dest.stat.uid
 
