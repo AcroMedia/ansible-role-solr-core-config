@@ -2,7 +2,13 @@
 - name: Verify role
   hosts: all
   become: yes
+  vars:
+    solr_core_conf_dest: "/var/solr/data/test/conf"
 
   tasks:
+    - name: Check permissions on solr core config files
+      shell: ls -ld "{{ solr_core_conf_dest }}" | grep 'solr'
+      register: solr_permission
+    - debug: var=solr_permission.stdout_lines
 
 
