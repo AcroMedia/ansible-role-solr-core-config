@@ -4,11 +4,32 @@
   become: yes
   vars:
     solr_core_conf_dest: "/var/solr/data/test/conf"
+    solr_config_xml_source: "/var/www/solr_conf/solrconfig.xml"
+    solr_core_properties_source: "/var/www/solr_conf/solrcore.properties"
 
   tasks:
-    - name: Check permissions on solr core config files
+    - name: Check permissions on solr conf folder
       shell: ls -ld "{{ solr_core_conf_dest }}" | grep 'solr'
       register: solr_permission
     - debug: var=solr_permission.stdout_lines
+
+
+    - name: Use sha256 to calculate checksum of a source file
+      stat:
+        path: "{{ solr_config_xml_source }}"
+        checksum_algorithm: sha256
+      register: shasum
+    - debug: var=shasum.stat.checksum
+
+    - name: Use sha256 to calculate checksum of the destination file
+      stat:
+        path: /var/solr/data/test/conf/solrconfig.xml
+        checksum_algorithm: sha256
+      register: chsum
+    - debug: var=chsum.stat.checksum
+
+    - assert:
+        that:
+          - shasum.stat.checksum == chsum.stat.checksum
 
 
