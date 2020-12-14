@@ -91,3 +91,7 @@
         src: "conf/7.x/"
         dest: "/var/www/solr_conf/"
 
+    - name: set permissions on solr core config files
+      command: >
+        /bin/chown -Rv solr:solr "/var/www/solr_conf/"
+
