@@ -19,6 +19,7 @@
         path: "{{ solr_config_xml_source }}"
         checksum_algorithm: sha256
       register: source
+    - debug: var=source
 
 
     - name: Check the properties of destination file
@@ -26,7 +27,7 @@
         path: "{{ solr_core_properties_dest }}"
         checksum_algorithm: sha256
       register: dest
-
+    - debug: var=dest
 
     - assert:
         that:
