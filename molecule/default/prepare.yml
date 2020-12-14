@@ -1,7 +1,48 @@
-- name: Make sure rysnc is installed locally
+---
+# ------------------------------------------------------------------------
+- name: Make sure rsync is installed (locally) on the ansible controller.
+    This is only necessary for testing roles that use rsync, because the fedora
+    image from robertdebock does not come with rsync installed.
   hosts: localhost
   connection: local
   become: no
+  gather_facts: yes
+  tasks:
+
+    - name: Update yum cache on the controller
+      yum:
+        update_cache: yes
+      when: ansible_os_family == 'RedHat'
+
+    - name: Ensure ssh client is installed on the controller
+      package:
+        name:
+          - openssh-clients
+        state: present
+      when: ansible_os_family == 'RedHat'
+
+    - name: Ensure rsync exists on the controller
+      package:
+        name:
+          - rsync
+        state: present
+# ------------------------------------------------------------------------
+- name: Prepare Install role dependencies
+  hosts: all
+  become: yes
+  gather_facts: yes
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=true cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+  roles:
+    - contrib/geerlingguy.java
+    - contrib/geerlingguy.solr
+
+# ------------------------------------------------------------------------
+- name: Prepare targets for converge
+  hosts: all
+  become: yes
   gather_facts: yes
   tasks:
 
@@ -17,8 +58,40 @@
         state: present
       when: ansible_os_family == 'RedHat'
 
+
     - name: Ensure rsync exists on the controller
       package:
         name:
           - rsync
         state: present
+      when: ansible_os_family == 'RedHat'
+
+    - name: Ensure OS-Agnostic dependencies are present in test image
+      package:
+        name: "{{ package_dependencies }}"
+        state: present
+      vars:
+        package_dependencies:
+          - openssh-server
+          - libpopt0
+          - rsync
+      when: ansible_os_family == 'Debian'
+    - name: Create solr conf directory
+      file:
+        path: /var/solr/data/test/conf
+        state: directory
+
+    - name: Create conf folder
+      file:
+        path: /var/www/solr_conf
+        state: directory
+
+    - name: Copy the solr schema into a temp folder
+      synchronize:
+        src: "conf/7.x/"
+        dest: "/var/www/solr_conf/"
+
+    - name: set permissions on solr core config files
+      command: >
+        /bin/chown -Rv solr:solr "/var/www/solr_conf/"
+
