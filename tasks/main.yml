@@ -51,7 +51,7 @@
 
 - name: Build the cron command string
   set_fact:
-    solr_cron_command: service {{ solr_service_name }} restart > /dev/null
+    solr_cron_command: service /etc/init.d/{{ solr_service_name }} restart > /dev/null
   when: enable_solr_restart == true
 
 
