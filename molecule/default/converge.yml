@@ -4,17 +4,11 @@
   become: true
 
   vars:
-
-    solr_service_name: solr
-    solr_home: /var/solr
-    solr_core_name: test
-    solr_core_conf_source: "./conf"
-    solr_core_conf_dest: "{{ solr_home }}/data/{{ solr_core_name }}/conf"
-  pre_tasks:
-  - name: Update apt cache.
-    apt: update_cache=true cache_valid_time=600
-    changed_when: false
-
+    - solr_service_name: solr
+    - solr_home: /var/solr
+    - solr_core_name: test
+    - solr_core_conf_source: "/var/www/solr_conf/"
+    - solr_core_conf_dest: "{{ solr_home }}/data/{{ solr_core_name }}/conf"
 
   roles:
     - role: ansible-role-solr-core-config
