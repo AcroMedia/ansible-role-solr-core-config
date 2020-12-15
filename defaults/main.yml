@@ -8,3 +8,4 @@ solr_cron_command: ''
 enable_solr_restart: true
 solr_cron_hours: 8
 solr_cron_minutes: 0
+solr_install_path: /opt/solr
