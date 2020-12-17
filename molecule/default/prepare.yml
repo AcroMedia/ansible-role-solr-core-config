@@ -21,11 +21,15 @@
         state: present
       when: ansible_os_family == 'RedHat'
 
+
     - name: Ensure rsync exists on the controller
       package:
         name:
           - rsync
         state: present
+      when: ansible_os_family == 'RedHat'
+
+
 # ------------------------------------------------------------------------
 - name: Prepare Install role dependencies
   hosts: all
@@ -46,6 +50,10 @@
   gather_facts: yes
   tasks:
 
+    - name: Install cron (Debian).
+      apt: name=cron state=present
+      when: ansible_os_family == 'Debian'
+
     - name: Update yum
       yum:
         update_cache: yes
@@ -65,6 +73,13 @@
           - rsync
         state: present
       when: ansible_os_family == 'RedHat'
+
+    - name: Install dependencies (RedHat).
+      yum: name={{ item }} state=present
+      when: ansible_os_family == 'RedHat'
+      with_items:
+        - cronie
+        - epel-release
 
     - name: Ensure OS-Agnostic dependencies are present in test image
       package:
