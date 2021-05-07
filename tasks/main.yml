@@ -1,4 +1,7 @@
 ---
+- name: Read os-family-dependent vars
+  include_vars: "vars/{{ ansible_os_family }}.yml"
+
 - name: Check to see if solr_core_conf_source exists
   stat:
     path: "{{ solr_core_conf_source }}"
@@ -51,9 +54,9 @@
 
 - name: Build the cron command string
   set_fact:
-    solr_cron_command: service {{ solr_install_path }}/bin/{{ solr_service_name }} restart > /dev/null
+    solr_cron_command: >
+      {{ arscc_path_to_service_binary }} {{ solr_service_name }} restart > /dev/null
   when: enable_solr_restart == true
-
 
 - name: Restart solr
   cron:
