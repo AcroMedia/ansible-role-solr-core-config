@@ -65,6 +65,9 @@
     owner: root
     group: root
     mode: 0644
+  notify:
+    - reload systemd
+    - arscc restart solr
 
 - name: Restart solr
   cron:

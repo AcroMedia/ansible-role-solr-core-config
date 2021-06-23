@@ -1,4 +1,7 @@
 ---
+- name: reload systemd
+  command: systemctl daemon-reload
+
 - name: arscc restart solr
   service:
     name: "{{ solr_service_name }}"
