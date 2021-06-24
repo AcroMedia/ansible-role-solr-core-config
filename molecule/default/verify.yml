@@ -35,3 +35,32 @@
           - source.stat.gr_name == dest.stat.gr_name
           - source.stat.uid == dest.stat.uid
 
+    - name: Query soft open file limit for solr process
+      # The "pgrep java" trick only works because we know we only have one java process.
+      shell: >
+        set -ue -o pipefail;
+        grep 'open files' /proc/$(pgrep java)/limits  | awk '{print $4}'
+      args:
+        executable: /bin/bash
+      register:
+        limit_soft_result
+
+    - name: Ensure the soft open file limit is what we want
+      assert:
+        that:
+          - limit_soft_result.stdout == '65000'
+
+    - name: Query hard open file limit for solr process
+      # The "pgrep java" trick only works because we know we only have one java process.
+      shell: >
+        set -ue -o pipefail;
+        grep 'open files' /proc/$(pgrep java)/limits  | awk '{print $5}'
+      args:
+        executable: /bin/bash
+      register:
+        limit_hard_result
+
+    - name: Ensure hard open file limit is what we want
+      assert:
+        that:
+          - limit_hard_result.stdout == '65000'
