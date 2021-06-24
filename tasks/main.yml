@@ -60,7 +60,7 @@
 
 - name: Create limitnofile
   template:
-    src: limitnofile.j2
+    src: templates/limitnofile.j2
     dest: /etc/security/limits.d/{{ solr_service_name }}.limitnofile.conf
     owner: root
     group: root
