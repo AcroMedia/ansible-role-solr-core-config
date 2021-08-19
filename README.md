@@ -19,7 +19,7 @@ This is meant to be used in conjunction with (and after both of) GeerlingGuy's s
 
 ### Required:
 * **solr_core_conf_source**: Absolute path to the directory on the server that contains your config set
-* **solr_core_name**: Name of the solr core installed in
+* **solr_core_name**: Name of the solr core that the conf files will be attached to
 
 ### Optional:
 * **solr_service_name**: In case your solr service is named something other than `solr`.
