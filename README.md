@@ -11,8 +11,8 @@ This is meant to be used in conjunction with (and after both of) GeerlingGuy's s
 
 ## Requirements
 
-* Your solr core's conf directory must already exist
-* Your source core conf files must already exist on the server
+* Your `solr_core_conf_dest` directory must already exist. I.e. You must have already created the solr core. If you're using [GeerlingGuy's solr role](https://github.com/geerlingguy/ansible-role-solr), then list your core name as one of the items in the `solr_cores` variable. Or create your core manually in the Solr UI. Or run the solr cli to create your core.
+* Your source core conf files must already exist on the server. E.g. Export your solr core config from your Drupal 8 site, commit that extracted folder to a folder outside your web root, and deploy the code to your server.
 
 
 ## Role Variables
@@ -24,7 +24,7 @@ This is meant to be used in conjunction with (and after both of) GeerlingGuy's s
 ### Optional:
 * **solr_service_name**: In case your solr service is named something other than `solr`.
 * **solr_home**: In case your solr files were configured somewhere other than `/var/solr`
-
+* **solr_core_conf_dest**: Defaults to `"{{ solr_home }}/data/{{ solr_core_name }}/conf"`. You shouldn't ever need to change this. It's only noted here, because it's very easy to miss creating your core before using t his role. This role does not create the solr core for you.
 
 ## Dependencies
 
