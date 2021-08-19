@@ -28,7 +28,8 @@ This is meant to be used in conjunction with (and after both of) GeerlingGuy's s
 
 ## Dependencies
 
-None
+- [geerlingguy.solr](https://github.com/geerlingguy/ansible-role-solr)
+- [acromedia.virtual-host](https://github.com/AcroMedia/ansible-role-virtual-host/)
 
 
 ## Example Playbooks
