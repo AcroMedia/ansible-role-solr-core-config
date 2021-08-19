@@ -24,7 +24,7 @@ This is meant to be used in conjunction with (and after both of) GeerlingGuy's s
 ### Optional:
 * **solr_service_name**: In case your solr service is named something other than `solr`.
 * **solr_home**: In case your solr files were configured somewhere other than `/var/solr`
-* **solr_core_conf_dest**: Defaults to `"{{ solr_home }}/data/{{ solr_core_name }}/conf"`. You shouldn't ever need to change this. It's only noted here, because it's very easy to miss creating your core before using t his role. This role does not create the solr core for you.
+* **solr_core_conf_dest**: Defaults to `"{{ solr_home }}/data/{{ solr_core_name }}/conf"`. You shouldn't ever need to change this. It's only noted here, because it's very easy to miss creating your core before using t his role. This role does not create the solr core for you. See the #Requirements section above.
 
 ## Dependencies
 
