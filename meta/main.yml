@@ -4,6 +4,8 @@ galaxy_info:
   company: Acro Media Inc
   license: GPLv3
   min_ansible_version: 2.4
+  namespace: acromedia
+  role_name: solr_core_config
   platforms:
     - name: EL
       versions:
