@@ -2,15 +2,28 @@
 - name: Read os-family-dependent vars
   include_vars: "vars/{{ ansible_os_family }}.yml"
 
+- name: Check to see if Solr core exists
+  stat:
+    path: "{{ solr_home }}/data/{{ solr_core_name }}"
+  register: result_core
+
+- assert:
+    that:
+      - "result_core.stat.exists and result_core.stat.isdir"
+    fail_msg: 'Solr core "{{ solr_core_name }}"  doesnot exist. Run the task to create the core first.'
+
+
 - name: Check to see if solr_core_conf_source exists
   stat:
     path: "{{ solr_core_conf_source }}"
   register: result_src
 
-- debug:
-    var: solr_core_conf_source
-- debug:
-    var: result_src
+- assert:
+    that:
+      - "result_src.stat.exists and result_src.stat.isdir"
+    fail_msg: "Solr config source files doesnot exist. 'Conf folder' from the corresponding Drupal module
+               can be copied to the project\'s home directory as the config source."
+
 
 - name: Check to see if solr_core_conf_dest exists
   stat:
@@ -21,6 +34,11 @@
     var: solr_core_conf_dest
 - debug:
     var: result_dest
+
+- assert:
+    that:
+      - "result_dest.stat.exists and result_dest.stat.isdir"
+    fail_msg: 'Solr config destination doesnot exist. The destination is usually the data folder inside the core.'
 
 - name: Copy the solr schema into the core's conf directory
   synchronize:
