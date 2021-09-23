@@ -22,7 +22,7 @@
     that:
       - "result_src.stat.exists and result_src.stat.isdir"
     fail_msg: "Solr config source files doesnot exist. 'Conf folder' from the corresponding Drupal module
-               can be copied to the project\'s home directory as the config source."
+               can be copied to the project's home directory as the config source."
 
 
 - name: Check to see if solr_core_conf_dest exists
