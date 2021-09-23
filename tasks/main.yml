@@ -2,17 +2,6 @@
 - name: Read os-family-dependent vars
   include_vars: "vars/{{ ansible_os_family }}.yml"
 
-- name: Check to see if Solr core exists
-  stat:
-    path: "{{ solr_home }}/data/{{ solr_core_name }}"
-  register: result_core
-
-- assert:
-    that:
-      - "result_core.stat.exists and result_core.stat.isdir"
-    fail_msg: 'Solr core "{{ solr_core_name }}"  doesnot exist. Run the task to create the core first.'
-
-
 - name: Check to see if solr_core_conf_source exists
   stat:
     path: "{{ solr_core_conf_source }}"
