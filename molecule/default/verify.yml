@@ -9,7 +9,11 @@
 
   tasks:
     - name: Check permissions on solr conf folder
-      shell: ls -ld "{{ solr_core_conf_dest }}" | grep 'solr'
+      shell: >
+        set -ue -o pipefail;
+        ls -ld "{{ solr_core_conf_dest }}" | grep 'solr'
+      args:
+        executable: /bin/bash
       register: solr_permission
     - debug: var=solr_permission.stdout_lines
 
@@ -22,16 +26,46 @@
     - debug: var=source
 
 
-    - name: Check the properties of destination file
+    - name: Query the properties of destination file
       stat:
         path: "{{ solr_core_properties_dest }}"
         checksum_algorithm: sha256
       register: dest
     - debug: var=dest
 
-    - assert:
+    - name: Assert core file properties
+      assert:
         that:
           - source.stat.checksum == dest.stat.checksum
           - source.stat.gr_name == dest.stat.gr_name
           - source.stat.uid == dest.stat.uid
 
+    - name: Query soft open file limit for solr process
+      # The "pgrep java" trick only works because we know we only have one java process.
+      shell: >
+        set -ue -o pipefail;
+        grep 'open files' /proc/$(pgrep java)/limits  | awk '{print $4}'
+      args:
+        executable: /bin/bash
+      register:
+        limit_soft_result
+
+    - name: Ensure the soft open file limit is what we want
+      assert:
+        that:
+          - limit_soft_result.stdout == '65000'
+
+    - name: Query hard open file limit for solr process
+      # The "pgrep java" trick only works because we know we only have one java process.
+      shell: >
+        set -ue -o pipefail;
+        grep 'open files' /proc/$(pgrep java)/limits  | awk '{print $5}'
+      args:
+        executable: /bin/bash
+      register:
+        limit_hard_result
+
+    - name: Ensure hard open file limit is what we want
+      assert:
+        that:
+          - limit_hard_result.stdout == '65000'
