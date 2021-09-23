@@ -7,10 +7,12 @@
     path: "{{ solr_core_conf_source }}"
   register: result_src
 
-- debug:
-    var: solr_core_conf_source
-- debug:
-    var: result_src
+- name: Assert the presence of solr_core_conf_source ({{ solr_core_conf_source }})
+  assert:
+    that:
+      - "result_src.stat.exists and result_src.stat.isdir"
+    fail_msg: >-
+      The path specified by `solr_core_conf_source` does not exist. Make sure the path is correct, and that the config files have been deployed to that directory.
 
 - name: Check to see if solr_core_conf_dest exists
   stat:
@@ -21,6 +23,19 @@
     var: solr_core_conf_dest
 - debug:
     var: result_dest
+
+- name: Assert the presence of solr_core_conf_dest ({{ solr_core_conf_dest }})
+  assert:
+    that:
+      - "result_dest.stat.exists and result_dest.stat.isdir"
+    fail_msg:
+      - The path specified by `solr_core_conf_dest` does not exist. Has the core `{{ solr_core_name }}` been created?
+      - Possible causes for this error include
+      - • The core is not listed in the geerlingguy.solr role's list of `solr_cores`
+      - • The core creation play did not run
+      - • The core name was misspelled either in this play, or in the core creation play
+      - • If there are multiple solr services running, the wrong service was specified, or the correct service specification was omitted
+
 
 - name: Copy the solr schema into the core's conf directory
   synchronize:
