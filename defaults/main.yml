@@ -9,3 +9,12 @@ enable_solr_restart: true
 solr_cron_hours: 8
 solr_cron_minutes: 0
 solr_install_path: /opt/solr
+
+# In case your drupal server and solr server are not the same machine:
+#  - Set delegate_to == the name of the machine they're coming from. If you want to push from the ansible controller, set as 'localhost'.
+#  - If pushing from localhost, set become == false
+#  - If pushing from localhost, set solr_core_conf_source as the absolute path on your local machine,
+#    or if they're committed to your ansible repo, then use {{ playbook_dir }}/path/to/solr_conf_dir
+solr_core_conf_synchronize_mode: push
+solr_core_conf_synchronize_delegate_to: "{{ inventory_hostname }}"
+solr_core_conf_synchronize_become: true   # In default mode, remote side will need to operate with sudo
