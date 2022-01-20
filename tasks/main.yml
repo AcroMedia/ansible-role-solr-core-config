@@ -3,11 +3,15 @@
   include_vars: "vars/{{ ansible_os_family }}.yml"
 
 - name: Check to see if solr_core_conf_source exists
+  become: "{{ solr_core_conf_synchronize_become }}"
+  delegate_to: "{{ solr_core_conf_synchronize_delegate_to }}"
   stat:
     path: "{{ solr_core_conf_source }}"
   register: result_src
 
 - name: Assert the presence of solr_core_conf_source ({{ solr_core_conf_source }})
+  become: "{{ solr_core_conf_synchronize_become }}"
+  delegate_to: "{{ solr_core_conf_synchronize_delegate_to }}"
   assert:
     that:
       - "result_src.stat.exists and result_src.stat.isdir"
