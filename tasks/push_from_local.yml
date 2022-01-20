@@ -1,0 +1,50 @@
+---
+- name: Check to see if solr_core_conf_local_source exists
+  become: false
+  delegate_to: localhost
+  stat:
+    path: "{{ solr_core_conf_local_source }}"
+  register: result_local_src
+
+- name: Assert the presence of solr_core_conf_local_source ({{ solr_core_conf_local_source }})
+  become: false
+  delegate_to: localhost
+  assert:
+    that:
+      - "result_local_src.stat.exists and result_local_src.stat.isdir"
+    fail_msg: >-
+      The path specified by `solr_core_conf_local_source` does not exist. Make sure the path is correct, and that the config files have been deployed to that directory.
+
+- name: Create an intermediate location for remote solr config files to live
+  become: false
+  file:
+    dest: "{{ solr_core_conf_remote_intermediate }}"
+    state: directory
+
+- name: Push local solr schema config files up to the server
+  delegate_to: localhost
+  become: false
+  synchronize:
+    src: "{{ solr_core_conf_local_source }}/"
+    dest: "{{ solr_core_conf_remote_intermediate }}/"
+    archive: true
+    checksum: true
+    compress: false
+    delete: true
+    dirs: true
+    group: false
+    mode: push
+    owner: false
+    perms: false
+    recursive: true
+    times: false
+  register: sync_solr_conf_from_local
+
+- name: debug sync_solr_conf_from_local
+  debug:
+    var: sync_solr_conf_from_local
+    verbosity: 1
+
+- name: Override the value for solr_core_conf_source to be the location where we pushed files from the ansible controller to the server.
+  set_fact:
+    solr_core_conf_source: "{{ solr_core_conf_remote_intermediate }}"

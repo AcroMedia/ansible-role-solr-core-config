@@ -2,16 +2,15 @@
 - name: Read os-family-dependent vars
   include_vars: "vars/{{ ansible_os_family }}.yml"
 
+- include_tasks: ./push_from_local.yml
+  when: solr_core_conf_local_source != ''
+
 - name: Check to see if solr_core_conf_source exists
-  become: "{{ solr_core_conf_synchronize_become }}"
-  delegate_to: "{{ solr_core_conf_synchronize_delegate_to }}"
   stat:
     path: "{{ solr_core_conf_source }}"
   register: result_src
 
 - name: Assert the presence of solr_core_conf_source ({{ solr_core_conf_source }})
-  become: "{{ solr_core_conf_synchronize_become }}"
-  delegate_to: "{{ solr_core_conf_synchronize_delegate_to }}"
   assert:
     that:
       - "result_src.stat.exists and result_src.stat.isdir"
@@ -28,7 +27,7 @@
 - debug:
     var: result_dest
 
-- name: Assert the presence of solr_core_conf_dest ({{ solr_core_conf_dest }})
+- name: Assert the presence of solr_core_conf_dest ({{ solr_core_conf_dest }}) directory
   assert:
     that:
       - "result_dest.stat.exists and result_dest.stat.isdir"
@@ -40,9 +39,7 @@
       - • The core name was misspelled either in this play, or in the core creation play
       - • If there are multiple solr services running, the wrong service was specified, or the correct service specification was omitted
 
-
-- name: Copy the solr schema into the core's conf directory
-  become: "{{ solr_core_conf_synchronize_become }}"
+- name: Copy the remote solr schema files into the core's conf directory
   synchronize:
     src: "{{ solr_core_conf_source }}/"
     dest: "{{ solr_core_conf_dest }}/"
@@ -52,12 +49,12 @@
     delete: true
     dirs: true
     group: false
-    mode: "{{ solr_core_conf_synchronize_mode }}"
+    mode: push
     owner: false
     perms: false
     recursive: true
     times: false
-  delegate_to: "{{ solr_core_conf_synchronize_delegate_to }}"
+  delegate_to: "{{ inventory_hostname }}"
   when: result_src is defined
     and result_src.stat is defined
     and result_src.stat.exists
