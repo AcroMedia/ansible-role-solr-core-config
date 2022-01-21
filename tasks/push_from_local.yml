@@ -22,7 +22,6 @@
     state: directory
 
 - name: Push local solr schema config files up to the server
-  delegate_to: localhost
   become: false
   synchronize:
     src: "{{ solr_core_conf_local_source }}/"
