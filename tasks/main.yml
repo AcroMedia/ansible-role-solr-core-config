@@ -64,6 +64,10 @@
   notify: arscc restart solr
   register: sync_solr_conf
 
+- name: debug sync_solr_conf
+  debug:
+    var: sync_solr_conf
+
 - name: Reset permissions on solr core config files
   command: >
     /bin/chown -Rv solr:solr "{{ solr_core_conf_dest }}"

@@ -41,7 +41,7 @@
 - name: debug sync_solr_conf_from_local
   debug:
     var: sync_solr_conf_from_local
-    verbosity: 1
+#    verbosity: 1
 
 - name: Override the value for solr_core_conf_source to be the location where we pushed files from the ansible controller to the server.
   set_fact:
