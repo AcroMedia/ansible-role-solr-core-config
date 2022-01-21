@@ -38,14 +38,17 @@
         path: "{{ solr_core_properties_dest }}"
         checksum_algorithm: sha256
       register: dest
-    - debug: var=dest
 
-    - name: Assert core file properties
+    - name: debug dest
+      debug:
+        var: dest
+
+    - name: Make sure the resulting config file looks as it should
       assert:
         that:
-          - source.stat.checksum == dest.stat.checksum
-          - source.stat.gr_name == dest.stat.gr_name
-          - source.stat.uid == dest.stat.uid
+          - dest.stat.checksum == source.stat.checksum
+          - dest.stat.gr_name == 'solr'
+          - dest.stat.uid == '1000'
 
     - name: Query soft open file limit for solr process
       # The "pgrep java" trick only works because we know we only have one java process.
