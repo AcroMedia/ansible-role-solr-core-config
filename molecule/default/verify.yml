@@ -47,8 +47,8 @@
       assert:
         that:
           - dest.stat.checksum == source.stat.checksum
-          - dest.stat.gr_name == 'solr'
-          - dest.stat.uid == '1000'
+          - dest.stat.gr_name == "solr"
+          - (dest.stat.uid|int) == 1000
 
     - name: Query soft open file limit for solr process
       # The "pgrep java" trick only works because we know we only have one java process.
