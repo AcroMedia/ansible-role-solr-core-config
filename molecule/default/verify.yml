@@ -4,7 +4,7 @@
   become: yes
   vars:
     solr_core_conf_dest: "/var/solr/data/test/conf"
-    solr_config_xml_source: "/var/www/solr_conf/solrconfig.xml"
+    solr_config_xml_source: "{{ playbook_dir }}/conf/7.x/solrconfig.xml"
     solr_core_properties_dest: "/var/solr/data/test/conf/solrconfig.xml"
 
   tasks:
@@ -15,30 +15,40 @@
       args:
         executable: /bin/bash
       register: solr_permission
-    - debug: var=solr_permission.stdout_lines
+
+    - name: debug solr_permission.stdout_lines
+      debug:
+        var: solr_permission.stdout_lines
 
 
-    - name: Check the properties of source file
+    - name: Check the properties of local source file
+      delegate_to: localhost
+      become: false
       stat:
         path: "{{ solr_config_xml_source }}"
         checksum_algorithm: sha256
       register: source
-    - debug: var=source
 
+    - name: debug source
+      debug:
+        var: source
 
     - name: Query the properties of destination file
       stat:
         path: "{{ solr_core_properties_dest }}"
         checksum_algorithm: sha256
       register: dest
-    - debug: var=dest
 
-    - name: Assert core file properties
+    - name: debug dest
+      debug:
+        var: dest
+
+    - name: Make sure the resulting config file looks as it should
       assert:
         that:
-          - source.stat.checksum == dest.stat.checksum
-          - source.stat.gr_name == dest.stat.gr_name
-          - source.stat.uid == dest.stat.uid
+          - dest.stat.checksum == source.stat.checksum
+          - dest.stat.gr_name == "solr"
+          - (dest.stat.uid|int) == 1000
 
     - name: Query soft open file limit for solr process
       # The "pgrep java" trick only works because we know we only have one java process.

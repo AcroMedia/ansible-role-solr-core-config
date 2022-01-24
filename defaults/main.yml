@@ -9,3 +9,12 @@ enable_solr_restart: true
 solr_cron_hours: 8
 solr_cron_minutes: 0
 solr_install_path: /opt/solr
+
+# If your drupal server and solr server are not the same machine:
+#  - Commit your solr core conf to your ansible controller repo
+#  - Set solr_core_conf_local_source to the path on your ansible controller machine  {{ playbook_dir }}/path/to/solr_conf_dir
+#  - The role will now ignore whatever value solr_core_conf_source is set to. Instead,
+#    the role will push the files up from the controller, and *then* set the value of `solr_core_conf_source`
+#    itself automatically, and proceed as normal.
+solr_core_conf_local_source: ''
+solr_core_conf_remote_intermediate: "/tmp/ansible-role-solr-core-config"

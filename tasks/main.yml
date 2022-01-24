@@ -2,6 +2,9 @@
 - name: Read os-family-dependent vars
   include_vars: "vars/{{ ansible_os_family }}.yml"
 
+- include_tasks: ./push_from_local.yml
+  when: solr_core_conf_local_source != ''
+
 - name: Check to see if solr_core_conf_source exists
   stat:
     path: "{{ solr_core_conf_source }}"
@@ -24,7 +27,7 @@
 - debug:
     var: result_dest
 
-- name: Assert the presence of solr_core_conf_dest ({{ solr_core_conf_dest }})
+- name: Assert the presence of solr_core_conf_dest ({{ solr_core_conf_dest }}) directory
   assert:
     that:
       - "result_dest.stat.exists and result_dest.stat.isdir"
@@ -36,8 +39,7 @@
       - • The core name was misspelled either in this play, or in the core creation play
       - • If there are multiple solr services running, the wrong service was specified, or the correct service specification was omitted
 
-
-- name: Copy the solr schema into the core's conf directory
+- name: Copy the remote solr schema files into the core's conf directory
   synchronize:
     src: "{{ solr_core_conf_source }}/"
     dest: "{{ solr_core_conf_dest }}/"
@@ -61,6 +63,10 @@
     and result_dest.stat.exists
   notify: arscc restart solr
   register: sync_solr_conf
+
+- name: debug sync_solr_conf
+  debug:
+    var: sync_solr_conf
 
 - name: Reset permissions on solr core config files
   command: >
