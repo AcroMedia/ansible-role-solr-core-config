@@ -17,4 +17,4 @@ solr_install_path: /opt/solr
 #    the role will push the files up from the controller, and *then* set the value of `solr_core_conf_source`
 #    itself automatically, and proceed as normal.
 solr_core_conf_local_source: ''
-solr_core_conf_remote_intermediate: "/root/ansible-role-solr-core-config"
+solr_core_conf_remote_intermediate: "/tmp/ansible-role-solr-core-config"
