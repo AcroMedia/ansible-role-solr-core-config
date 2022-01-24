@@ -98,9 +98,3 @@
     minute: "{{ solr_cron_minutes }}"
     job: "{{ solr_cron_command }}"
   when: solr_cron_command != ''
-
-- name: Clean up intermediate location
-  when: solr_core_conf_remote_intermediate != ''
-  file:
-    state: absent
-    path: "{{ solr_core_conf_remote_intermediate }}/"

@@ -15,11 +15,6 @@
     fail_msg: >-
       The path specified by `solr_core_conf_local_source` does not exist. Make sure the path is correct, and that the config files have been deployed to that directory.
 
-- name: Ensure the intermediate location starts clean
-  file:
-    state: absent
-    path: "{{ solr_core_conf_remote_intermediate }}/"
-
 - name: Create an intermediate location for remote solr config files to live
   become: false
   file:
